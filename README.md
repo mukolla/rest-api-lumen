@@ -41,14 +41,14 @@ This will open an interactive shell where you can run PHP commands.
 ## Running Adminer
 To access the Adminer tool for managing the database, execute the following command:
 
-    google-chrome http://127.0.0.1:8080/?pgsql=db&username=lumen_api&db=lumen_api_db&ns=public
+    http://127.0.0.1:8080/?pgsql=db&username=lumen_api&db=lumen_api_db&ns=public
 
 This will open the Adminer tool in your default web browser, allowing you to interact with the database.
 
 ## Running Mailhog
 Mailhog is a tool for capturing and viewing email messages during development. To access Mailhog, run the following command:
 
-    google-chrome http://localhost:8025/#
+    http://localhost:8025/#
 
 This will open Mailhog in your web browser, where you can view any emails sent by the application.
 
