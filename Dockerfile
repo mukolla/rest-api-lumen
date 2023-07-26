@@ -51,8 +51,6 @@ RUN chown www:www /usr/local/bin/docker-php-entrypoint
 # Copy existing application directory permissions
 RUN chown www:www /var/www
 
-RUN composer install
-
 USER www
 
 RUN chmod +x /usr/local/bin/docker-php-entrypoint
