@@ -5,6 +5,8 @@ set -e
 # Set working directory
 cd /var/www
 
+composer install
+
 # Copy environment file
 cp /var/www/.env.example /var/www/.env
 
