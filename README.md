@@ -1,27 +1,56 @@
-# Lumen PHP Framework
+## Description
+This is an example implementation of a RESTful API using Laravel Lumen, a stunningly fast PHP micro-framework.
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/lumen-framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/lumen-framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/lumen)](https://packagist.org/packages/laravel/lumen-framework)
+## Prerequisites
+Before running the project, ensure you have the following installed on your system:
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+- Docker
+- Google Chrome (or any other modern web browser)
 
-> **Note:** In the years since releasing Lumen, PHP has made a variety of wonderful performance improvements. For this reason, along with the availability of [Laravel Octane](https://laravel.com/docs/octane), we no longer recommend that you begin new projects with Lumen. Instead, we recommend always beginning new projects with [Laravel](https://laravel.com).
+## Setup
+### Clone the project repository to your local machine.
+    git clone https://github.com/mukolla/rest-api-lumen.git
 
-## Official Documentation
+### Navigate to the project's root directory.
+    cd rest-api-lumen
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+### Run install script
+    ./run.docker-compose.sh
 
-## Contributing
+## Running Migrations
+To run the database migrations, execute the following command:
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    docker exec lumen_api_app php artisan migrate
 
-## Security Vulnerabilities
+This command will apply the pending database migrations.
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+## Seeding the Database
+To seed the database with initial data, use the following command:
 
-## License
+    docker exec lumen_api_app php artisan db:seed
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# rest-api-lumen
+This command will populate the database with sample data.
+
+## Running PHP Shell
+To access the PHP shell within the Docker container, run the following command:
+
+    docker exec -it lumen_api_app /bin/bash
+
+This will open an interactive shell where you can run PHP commands.
+
+## Running Adminer
+To access the Adminer tool for managing the database, execute the following command:
+
+    google-chrome http://127.0.0.1:8080/?pgsql=db&username=lumen_api&db=lumen_api_db&ns=public
+
+This will open the Adminer tool in your default web browser, allowing you to interact with the database.
+
+## Running Mailhog
+Mailhog is a tool for capturing and viewing email messages during development. To access Mailhog, run the following command:
+
+    google-chrome http://localhost:8025/#
+
+This will open Mailhog in your web browser, where you can view any emails sent by the application.
+
+## Import Postman collections
+    https://api.postman.com/collections/3784889-1eaa71ec-7527-4cb8-82e3-c1a6cf115c8f?access_key=PMAT-01H6A34T589GJ0C9G672804SXG

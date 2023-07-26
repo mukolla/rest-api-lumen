@@ -1,0 +1,200 @@
+{
+	"info": {
+		"_postman_id": "1eaa71ec-7527-4cb8-82e3-c1a6cf115c8f",
+		"name": "lumenapp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3784889"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Michael\",\n    \"last_name\": \"Johnson\",\n    \"email\": \"michael.johnson1@example.com\",\n    \"password\": \"securepass123\",\n    \"phone\": \"5555555555\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sign-in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"token\", jsonData.data.access_token);",
+							"pm.globals.set(\"token\", jsonData.data.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"michael.johnson@example.com\",\n    \"password\": \"securepass123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/user/sign-in",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "recover-password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"michael.johnson@example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/user/recover-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"recover-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "reset-password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"mukolla+2@gmail.com\",\n    \"password\": \"d12345678\",\n    \"password_confirmation\": \"d12345678\",\n    \"token\": \"1c165b2d20c757473c3f5777f7309c7a90b7d08b190c0ef5be2e7f6759fbe732\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/user/reset-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"reset-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "companies",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost/api/user/companies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"companies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "companies",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Назва компанії\",\n    \"phone\": \"1234567890\",\n    \"description\": \"Опис компанії\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/user/companies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"companies"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

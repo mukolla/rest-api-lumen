@@ -2,14 +2,25 @@
 
 namespace App\Models;
 
+use App\Mail\ResetPasswordMail;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Lumen\Auth\Authorizable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+/**
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $email
+ * @property string $password
+ * @property string $phone
+ */
+class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPassword
 {
     use Authenticatable, Authorizable, HasFactory;
 
@@ -19,7 +30,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var string[]
      */
     protected $fillable = [
-        'name', 'email',
+        'first_name', 'last_name', 'email', 'password', 'phone',
     ];
 
     /**
@@ -30,4 +41,40 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+
+    public function companies()
+    {
+        return $this->hasMany(Company::class);
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+    public function getEmailForPasswordReset()
+    {
+        return $this->email;
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $resetPasswordUrl = url('/password/reset/'.$token);
+        Mail::to($this->email)->send(new ResetPasswordMail($token, $resetPasswordUrl));
+    }
 }

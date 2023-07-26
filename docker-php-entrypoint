@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+# Set working directory
+cd /var/www
+
+# Copy environment file
+cp /var/www/.env.example /var/www/.env
+
+# Generate key
+php -r "file_put_contents('.env', 'APP_KEY=' . base64_encode(random_bytes(32)) . PHP_EOL . file_get_contents('.env'));"
+php artisan jwt:secret
+
+#php artisan migrate
+#php artisan db:seed
+
+exec "$@"

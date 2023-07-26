@@ -1,0 +1,84 @@
+version: '3'
+services:
+
+  #PHP Service
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 'lumen_api_app'
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: '/var/www'
+    volumes:
+      - ./:/var/www
+    networks:
+      - app-network
+
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: 'lumen_api_webserver'
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  db:
+      image: postgres:latest
+      container_name: 'lumen_api_db'
+      restart: unless-stopped
+      tty: true
+      ports:
+          - "5432:5432"
+      environment:
+          POSTGRES_DB: 'lumen_api_db'
+          POSTGRES_USER: 'lumen_api'
+          POSTGRES_PASSWORD: 'lumen_api'
+          SERVICE_TAGS: dev
+          SERVICE_NAME: postgres
+      volumes:
+          - pgdata:/var/lib/postgresql/data
+      networks:
+          - app-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: 'lumen_api_smtp'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    volumes:
+        - mailhog_logs:/var/log/mailhog
+    networks:
+        - app-network
+
+  adminer:
+      image: adminer
+      container_name: 'lumen_api_adminer'
+      restart: unless-stopped
+      tty: true
+      ports:
+          - "8080:8080"
+      networks:
+          - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  pgdata:
+    driver: local
+  mailhog_logs:
+    driver: local
