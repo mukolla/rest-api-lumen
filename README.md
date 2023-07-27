@@ -5,6 +5,7 @@ This is an example implementation of a RESTful API using Laravel Lumen, a stunni
 Before running the project, ensure you have the following installed on your system:
 
 - Docker
+- Docker compose
 - Google Chrome (or any other modern web browser)
 
 ## Setup
@@ -54,3 +55,9 @@ This will open Mailhog in your web browser, where you can view any emails sent b
 
 ## Import Postman collections
     https://api.postman.com/collections/3784889-1eaa71ec-7527-4cb8-82e3-c1a6cf115c8f?access_key=PMAT-01H6A34T589GJ0C9G672804SXG
+
+
+# What needs to be done next:
+- To enhance authentication and differentiate between a corrupted JWT token and an expired one, these errors should be handled separately.
+- Add Swagger API documentation.
+- Cover the core functionality with tests.
