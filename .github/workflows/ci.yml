@@ -11,20 +11,30 @@ on:
     types: [created]
 
 jobs:
-  build-and-test:
+  laravel-pint-and-test:
     runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+      - name: Composer Install
+        run: composer install
 
       - name: Run Laravel Pint
-        run: |
-          docker run --rm -v $(pwd):/var/www -w /var/www mukolla/rest-api-lumen:latest vendor/bin/pint
+        run: ./vendor/bin/pint
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply Laravel Pint changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
 
       - name: Run tests
-        run: |
-          docker run --rm -v $(pwd):/var/www -w /var/www mukolla/rest-api-lumen:latest vendor/bin/phpunit --colors=always
+        run: ./vendor/bin/phpunit --colors=always
