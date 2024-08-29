@@ -11,9 +11,8 @@ on:
     types: [created]
 
 jobs:
-  run-laravel-pint:
+  laravel-pint-and-test:
     runs-on: ubuntu-latest
-    needs: checkout-and-setup
 
     steps:
       - name: Set up PHP
@@ -36,22 +35,6 @@ jobs:
           commit_message: Apply Laravel Pint changes
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-
-  run-tests:
-    runs-on: ubuntu-latest
-    needs: run-laravel-pint
-
-    steps:
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Composer Install
-        run: composer install --no-dev --no-scripts --no-autoloader
 
       - name: Run tests
         run: ./vendor/bin/phpunit --colors=always
