@@ -1,0 +1,31 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  release:
+    types: [created]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Compose
+        run: docker compose -f docker-compose.yml up -d php
+
+      - name: Install dependencies
+        run: docker compose run --rm php composer install
+
+      - name: Run Laravel Pint
+        run: docker compose run --rm php vendor/bin/pint
+
+      - name: Run tests
+        run: docker compose exec -T php vendor/bin/phpunit --colors=always
