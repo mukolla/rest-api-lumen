@@ -41,6 +41,8 @@ RUN useradd -u 1000 -ms /bin/bash -g www www
 # Copy existing application directory contents
 COPY --chown=www:www . /var/www
 
+RUN mkdir -p /var/www/vendor && chmod -R 775 /var/www/vendor
+
 # Copy docker-php-entrypoint script
 COPY ./docker-php-entrypoint /usr/local/bin/
 
