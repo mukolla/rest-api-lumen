@@ -3,21 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\User as UserResource;
-use App\Services\UserFactory;
+use App\Services\UserRegistrationService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    private UserFactory $userFactory;
-
-    public function __construct(UserFactory $userFactory)
-    {
-        $this->userFactory = $userFactory;
-    }
-
-    public function register(Request $request): \Illuminate\Http\JsonResponse
+    public function register(Request $request, UserRegistrationService $userRegistrationService): JsonResponse
     {
         $this->validate($request, [
             'first_name' => 'required|string',
@@ -27,15 +20,9 @@ class UserController extends Controller
             'phone' => 'required|string',
         ]);
 
-        $userData = [
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'phone' => $request->input('phone'),
-        ];
+        $userData = $request->only(['first_name', 'last_name', 'email', 'password', 'phone']);
 
-        $user = $this->userFactory->create($userData);
+        $user = $userRegistrationService->register($userData);
 
         return (new UserResource($user))
             ->additional(['message' => 'Successfully registered user!'])

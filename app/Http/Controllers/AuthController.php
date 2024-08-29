@@ -27,8 +27,9 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only(['email', 'password']);
+        $token = Auth::attempt($credentials);
 
-        if (! $token = Auth::attempt($credentials)) {
+        if ($token === false) {
             return (new MessageResponse(['message' => 'Invalid credentials']))
                 ->response()
                 ->setStatusCode(Response::HTTP_PAYMENT_REQUIRED);
@@ -51,10 +52,10 @@ class AuthController extends Controller
         if ($status === Password::RESET_LINK_SENT) {
             return (new SuccessResponse(['message' => 'Password reset link sent!']))
                 ->response();
-        } else {
-            return (new BadRequestResponse(['message' => 'Unable to send reset link. Please try again later.']))
-                ->response();
         }
+
+        return (new BadRequestResponse(['message' => 'Unable to send reset link. Please try again later.']))
+            ->response();
     }
 
     /**
@@ -80,9 +81,9 @@ class AuthController extends Controller
         if ($status === Password::PASSWORD_RESET) {
             return (new SuccessResponse(['message' => 'Password reset successfully!']))
                 ->response();
-        } else {
-            return (new BadRequestResponse(['message' => 'Unable to reset password. Please try again later.']))
-                ->response();
         }
+
+        return (new BadRequestResponse(['message' => 'Unable to reset password. Please try again later.']))
+            ->response();
     }
 }

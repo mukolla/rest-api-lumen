@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Factory;
 
 use App\Models\User;
 
 class UserFactory
 {
+    public function __construct(private readonly User $user)
+    {
+    }
+
     public function create(array $userData): User
     {
-        return User::create([
+        return $this->user::create([
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
             'email' => $userData['email'],

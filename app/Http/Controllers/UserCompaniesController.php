@@ -3,28 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DataResponse;
-use App\Repositories\CompanyRepository;
-use App\Services\CompanyFactory;
+use App\Services\CompanyCreationService;
+use App\Services\CompanyListingService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
 class UserCompaniesController extends Controller
 {
-    private CompanyFactory $companyFactory;
-
-    private CompanyRepository $companyRepository;
-
-    public function __construct(CompanyFactory $companyFactory, CompanyRepository $companyRepository)
-    {
-        $this->companyFactory = $companyFactory;
-        $this->companyRepository = $companyRepository;
-    }
-
     /**
      * @throws ValidationException
      */
-    public function create(Request $request): \Illuminate\Http\JsonResponse
+    public function create(Request $request, CompanyCreationService $companyCreationService): JsonResponse
     {
         $this->validate($request, [
             'title' => 'required|string',
@@ -35,18 +26,17 @@ class UserCompaniesController extends Controller
         $user = $request->user();
         $companyData = $request->only(['title', 'phone', 'description']);
 
-        $company = $this->companyFactory->create($companyData);
-        $user->companies()->save($company);
+        $company = $companyCreationService->createCompanyForUser($companyData, $user);
 
         return (new DataResponse($company))
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function list(Request $request): \Illuminate\Http\JsonResponse
+    public function list(Request $request, CompanyListingService $companyListingService): JsonResponse
     {
         $user = $request->user();
-        $companies = $this->companyRepository->getUserCompanies($user);
+        $companies = $companyListingService->getUserCompanies($user);
 
         return (new DataResponse($companies))
             ->response();

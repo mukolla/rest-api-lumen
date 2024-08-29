@@ -23,12 +23,7 @@ class ResetPasswordMail extends Mailable
         $this->resetPasswordUrl = $resetPasswordUrl;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-    public function build()
+    public function build(): ResetPasswordMail
     {
         return $this->subject('Reset Password Notification')
             ->view('emails.reset_password');

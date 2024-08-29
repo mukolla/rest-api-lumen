@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DataResponse extends JsonResource
@@ -13,7 +14,7 @@ class DataResponse extends JsonResource
      */
     public static $wrap = 'data';
 
-    public function response($request = null): \Illuminate\Http\JsonResponse
+    public function response($request = null): JsonResponse
     {
         return parent::response($request);
     }
