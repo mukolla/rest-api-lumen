@@ -21,14 +21,8 @@ jobs:
       - name: Set up Docker Compose
         run: docker compose -f docker-compose.yml up -d php
 
-      - name: Prepare and Install Dependencies
-        run: |
-          docker compose exec php mkdir -p /var/www/vendor
-          docker compose exec php chmod -R 775 /var/www/vendor
-          docker compose run --rm php composer install
-
       - name: Run Laravel Pint
-        run: docker compose run --rm php vendor/bin/pint
+        run: docker compose exec -T php vendor/bin/pint
 
       - name: Run tests
         run: docker compose exec -T php vendor/bin/phpunit --colors=always
