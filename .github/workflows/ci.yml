@@ -11,8 +11,9 @@ on:
     types: [created]
 
 jobs:
-  checkout-and-setup:
+  run-laravel-pint:
     runs-on: ubuntu-latest
+    needs: checkout-and-setup
 
     steps:
       - name: Set up PHP
@@ -25,14 +26,6 @@ jobs:
 
       - name: Composer Install
         run: composer install --no-dev --no-scripts --no-autoloader
-
-  run-laravel-pint:
-    runs-on: ubuntu-latest
-    needs: checkout-and-setup
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
       - name: Run Laravel Pint
         run: ./vendor/bin/pint
@@ -49,8 +42,16 @@ jobs:
     needs: run-laravel-pint
 
     steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Composer Install
+        run: composer install --no-dev --no-scripts --no-autoloader
 
       - name: Run tests
         run: ./vendor/bin/phpunit --colors=always
