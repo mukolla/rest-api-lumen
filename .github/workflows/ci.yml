@@ -11,10 +11,11 @@ on:
     types: [created]
 
 jobs:
-  setup-composer:
+  run-laravel-pint:
     runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.cache-composer.outputs.cache-hit }}
+
+    permissions:
+      contents: write
 
     steps:
       - name: Set up PHP
@@ -25,31 +26,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Cache Composer dependencies
-        id: cache-composer
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
-          restore-keys: composer-
-
-      - name: Install Composer dependencies
+      - name: Composer Install
         run: composer install
-
-      - name: Save Composer vendor directory
-        if: steps.cache-composer.outputs.cache-hit != 'true'
-        run: echo "::set-output name=vendor-path::$(pwd)/vendor"
-
-  run-laravel-pint:
-    runs-on: ubuntu-latest
-    needs: setup-composer
-
-    permissions:
-      contents: write
-
-    steps:
-      - name: Use Composer vendor from setup
-        run: cp -r ${{ needs.setup-composer.outputs['vendor-path'] }} ./vendor
 
       - name: Run Laravel Pint
         run: ./vendor/bin/pint
@@ -63,11 +41,19 @@ jobs:
 
   run-tests:
     runs-on: ubuntu-latest
-    needs: setup-composer
+    needs: run-laravel-pint
 
     steps:
-      - name: Use Composer vendor from setup
-        run: cp -r ${{ needs.setup-composer.outputs['vendor-path'] }} ./vendor
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Composer Install
+        run: composer install
 
       - name: Run tests
         run: ./vendor/bin/phpunit --colors=always
